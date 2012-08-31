@@ -1,0 +1,55 @@
+package space.objects 
+{
+	import Box2D.Dynamics.Contacts.b2ContactEdge;
+	import Box2D.Dynamics.Controllers.b2ControllerEdge;
+	import Box2D.Dynamics.*;
+	import Box2D.Collision.*;
+	import Box2D.Collision.Shapes.*;
+	import Box2D.Common.Math.*;
+	import Box2D.Dynamics.Joints.*;
+	import flash.display.Sprite;
+	import flash.display.GradientType;
+	import flash.geom.Matrix;
+	import space.DEngine;
+	import space.ImageResources;
+	/**
+	 * ...
+	 * @author Codir
+	 */
+	public class Planet extends CoreObject
+	{
+		
+		public function Planet(pX:Number, pY:Number, r:Number, image:String,  _world:b2World,  _worldScale:int, _state:DEngine) 
+		{
+			super(pX, pY, r, image,  _world,  _worldScale, _state);
+		}
+		
+		override public function createBody(pX:Number, pY:Number):void
+		{
+			var fixtureDef:b2FixtureDef = new b2FixtureDef();
+			fixtureDef.restitution=0;
+			fixtureDef.density=1;
+			var circleShape:b2CircleShape=new b2CircleShape(r/worldScale);
+			fixtureDef.shape = circleShape;
+			fixtureDef.friction = 0.1;
+			fixtureDef.restitution = 0;
+			var bodyDef:b2BodyDef=new b2BodyDef();
+			bodyDef.position.Set(pX / worldScale, pY / worldScale);
+			bodyDef.type = b2Body.b2_staticBody;
+			bodyDef.userData = this;
+			body = world.CreateBody(bodyDef);
+			state.planetVector.push(body);
+			body.CreateFixture(fixtureDef);
+		}
+		
+		override public function handleBeginContact(contactObj:*):void 
+		{
+			if(contactObj is Ship)
+			{
+				trace('Ship');
+			}
+		}
+		
+	}
+
+}
